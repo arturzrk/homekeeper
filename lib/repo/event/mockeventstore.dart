@@ -1,3 +1,4 @@
+import 'package:homekeeper/model/category.dart';
 import 'package:homekeeper/model/event.dart';
 import 'package:homekeeper/repo/event/eventstore.dart';
 
@@ -7,19 +8,19 @@ class MockEventStore implements EventStore {
   final cEvents =  [
     Event(
       title: 'first',
-      category: EventCategory.Hydrofor,
+      category: EventCategory.hydrofor,
       occurenceDate: DateTime.now(),
       reoccurenceDaysCount: 90
     ),
     Event(
       title: 'second',
-      category: EventCategory.Rekuperator,
+      category: EventCategory.rekuperator,
       occurenceDate: DateTime.now().add(Duration(days: 20)),
       reoccurenceDaysCount: 365
     ),
     Event(
       title: 'third',
-      category: EventCategory.Szambo,
+      category: EventCategory.scieki,
       occurenceDate: DateTime.now().add(Duration(days: 30)),
       reoccurenceDaysCount: 30
     )

@@ -62,7 +62,7 @@ class EventListPageState extends State<EventListPage> {
 
   Widget buildEventRow(Event event) {
     return ListTile(
-      leading: categoryIcon[event.category],
+      leading: event.category.icon,
       title: Text(
         event.title,
         style: _biggerFont,

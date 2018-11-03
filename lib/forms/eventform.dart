@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:homekeeper/model/category.dart';
 import 'package:homekeeper/model/event.dart';
+import 'package:homekeeper/widgets/inputdropdown.dart';
+import 'package:intl/intl.dart';
 
 class EventForm extends StatefulWidget {
   @override
@@ -13,6 +17,18 @@ class EventFormState extends State<EventForm> {
   final _formkey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   Event _formData = new Event();
+
+  Future<Null> _selectDate(BuildContext context,ValueChanged<DateTime> selectDate) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101)
+    );
+    if (picked != null && picked != _formData.occurenceDate)
+      selectDate(picked);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,47 +36,98 @@ class EventFormState extends State<EventForm> {
         appBar: AppBar(
           title: Text('New Event')
         ),
-        body: Form(
-        key: _formkey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-          TextFormField(
-            decoration: InputDecoration(
-              hintText: 'Description',
-              labelText: 'Goal'
-            ),
-            validator: _validateTextBoxEntry,
-            onSaved: (value) { _formData.title = value; },
-          ),
-          FormField(
-            builder: (FormFieldState state) {
-              return DropdownButton(
-                value: _formData.category,
-                onChanged: (EventCategory newValue) {
-                  setState(() {
-                    _formData.category = newValue;
-                    state.didChange(newValue);                    
-                  });
-                },
-                items: EventCategory.values.map(
-                   (EventCategory cat) {
-                    return DropdownMenuItem(value: cat, child: Text(cat.  toString()));
-                    }
-                  ).toList()
-              );
-            },
-          ),
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: RaisedButton(
-                onPressed: _onSubmitPressed,
-                child: Text('Submit'),
-              ),
-            ),
-          ]
+        body: DropdownButtonHideUnderline(
+          child: SafeArea(
+            top: false,
+            bottom: false,
+            child: Form(
+              key: _formkey,
+              child: ListView(
+                padding: EdgeInsets.all(16.0),
+                children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Description of the task',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.all(20.0),
+                    ),
+                    maxLines: 5,
+                    validator: _validateTextBoxEntry,
+                    style: Theme.of(context).textTheme.display1,
+                    onSaved: (value) { _formData.title = value; },
+                  ),
+                  InputDropDown(
+                    labelText: 'When',
+                    valueText: _formData.occurenceDate == null ? 'null' : DateFormat.yMMMd().format(_formData.occurenceDate),
+                    valueStyle: Theme.of(context).textTheme.title,
+                    onPressed: ()  {_selectDate( context, 
+                        (DateTime date) {
+                          setState(() {
+                            _formData.occurenceDate = date;
+                          });
+                        }
+                  );}),  
+                  InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Category',
+                      hintText: 'Choose a category',
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    baseStyle: Theme.of(context).textTheme.title,
+                    child: DropdownButton<EventCategory>(
+                      value: _formData.category,
+                      onChanged: (EventCategory value) {
+                        setState(() {_formData.category = value;});
+                      },
+                      items: EventCategory.eventCategories.map( (category) {
+                       return DropdownMenuItem<EventCategory>(
+                         value: category,
+                         child: Text(category.name),
+                       );
+                      }).toList()
+                    )
+                  ),
+                  InputDecorator(
+                    decoration: InputDecoration(
+                      labelText: 'Auto-repeat',
+                      hintText: 'Select to activate Auto-repeat feature',
+                    ),
+                    baseStyle: Theme.of(context).textTheme.title,
+                    child:FormField( 
+                      builder: (FormFieldState state) {
+                        return MergeSemantics(
+                          child: Switch(
+                          value: _formData.isReoccurence,
+                          onChanged: (bool value) { setState(() {_formData.isReoccurence = value;});}
+                          )
+                        );
+                      })
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Cycle Days'
+                    ),
+                    initialValue: '0',
+                    keyboardType: TextInputType.number,
+                    onSaved: (String value) {
+                      setState(() {
+                        _formData.reoccurenceDaysCount = int.tryParse(value);                              
+                      });
+                    },
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: RaisedButton(
+                        onPressed: _onSubmitPressed,
+                        child: Text('Submit'),
+                      ),
+                  ),
+                ]
+              )
+            )
+          )
         )
-      )
     );
   }
 
@@ -74,7 +141,9 @@ class EventFormState extends State<EventForm> {
   void _onSubmitPressed() {
     if (_formkey.currentState.validate()) {
       _formkey.currentState.save();
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Processing Data..Event Title = ${_formData.title}')));
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(content: Text('Processing Data..Event to happen on ${_formData.occurenceDate}, title = ${_formData.title}, reocurence ? ${_formData.isReoccurence}, cycle = ${_formData.reoccurenceDaysCount}'))
+      );
     }
   }
 }
