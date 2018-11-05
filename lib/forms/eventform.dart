@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:homekeeper/model/category.dart';
 import 'package:homekeeper/model/event.dart';
+import 'package:homekeeper/repo/event/eventstore.dart';
 import 'package:homekeeper/widgets/inputdropdown.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:intl/intl.dart';
 
 class EventForm extends StatefulWidget {
@@ -16,7 +18,9 @@ class EventFormState extends State<EventForm> {
 
   final _formkey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final Injector injector = Injector.getInjector();
   Event _formData = new Event();
+  EventStore _service;
 
   Future<Null> _selectDate(BuildContext context,ValueChanged<DateTime> selectDate) async {
     final DateTime picked = await showDatePicker(
@@ -27,6 +31,15 @@ class EventFormState extends State<EventForm> {
     );
     if (picked != null && picked != _formData.occurenceDate)
       selectDate(picked);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _service = injector.get<EventStore>();
+    setState(() {
+          
+        });
   }
 
   @override
@@ -74,14 +87,14 @@ class EventFormState extends State<EventForm> {
                       contentPadding: EdgeInsets.zero,
                     ),
                     baseStyle: Theme.of(context).textTheme.title,
-                    child: DropdownButton<EventCategory>(
+                    child: DropdownButton<String>(
                       value: _formData.category,
-                      onChanged: (EventCategory value) {
+                      onChanged: (String value) {
                         setState(() {_formData.category = value;});
                       },
                       items: EventCategory.eventCategories.map( (category) {
-                       return DropdownMenuItem<EventCategory>(
-                         value: category,
+                       return DropdownMenuItem<String>(
+                         value: category.name,
                          child: Text(category.name),
                        );
                       }).toList()
@@ -138,12 +151,13 @@ class EventFormState extends State<EventForm> {
     return null;
   }
 
-  void _onSubmitPressed() {
+  void _onSubmitPressed() async{
     if (_formkey.currentState.validate()) {
       _formkey.currentState.save();
       _scaffoldKey.currentState.showSnackBar(
-        SnackBar(content: Text('Processing Data..Event to happen on ${_formData.occurenceDate}, title = ${_formData.title}, reocurence ? ${_formData.isReoccurence}, cycle = ${_formData.reoccurenceDaysCount}'))
-      );
+        SnackBar(content: Text('Processing Data..Event to happen on ${_formData.occurenceDate}, title = ${_formData.title}, reocurence ? ${_formData.isReoccurence}, cycle = ${_formData.reoccurenceDaysCount}')));
+      await _service.createEvent(_formData);
+      Navigator.pop(context);
     }
   }
 }

@@ -3,31 +3,34 @@ import 'package:homekeeper/model/event.dart';
 import 'package:homekeeper/repo/event/eventstore.dart';
 
 class MockEventStore implements EventStore {
+  
   MockEventStore();
 
+  final Duration _interval = Duration(milliseconds: 200);
   final cEvents =  [
     Event(
       title: 'first',
-      category: EventCategory.hydrofor,
+      category: EventCategory.hydrofor.name,
       occurenceDate: DateTime.now(),
       reoccurenceDaysCount: 90
     ),
     Event(
       title: 'second',
-      category: EventCategory.rekuperator,
+      category: EventCategory.rekuperator.name,
       occurenceDate: DateTime.now().add(Duration(days: 20)),
       reoccurenceDaysCount: 365
     ),
     Event(
       title: 'third',
-      category: EventCategory.scieki,
+      category: EventCategory.scieki.name,
       occurenceDate: DateTime.now().add(Duration(days: 30)),
       reoccurenceDaysCount: 30
     )
   ];
 
   @override
-  String createEvent(Event event) {
+  Future<String> createEvent(Event event) async{
+    cEvents.add(event);
     return "1234";
   }
 
@@ -37,8 +40,9 @@ class MockEventStore implements EventStore {
   }
 
   @override
-  List<Event> getEvents() {
-    return cEvents;
+  Stream<List<Event>> getEvents() async* {
+    await Future.delayed(_interval);
+    yield cEvents;
   }
 
   @override
