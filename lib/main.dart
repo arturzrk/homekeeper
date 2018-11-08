@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:homekeeper/pages/eventlist.dart';
 import 'package:homekeeper/repo/event/eventstore.dart';
+import 'package:homekeeper/repo/event/fireeventstore.dart';
 import 'package:homekeeper/repo/event/mockeventstore.dart';
 
 Future main() async { 
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
 
 void setupDependencies() {
   final Injector injector = Injector.getInjector();
-  injector.map<EventStore>((i) => new MockEventStore());  
+  injector.map<EventStore>((i) => new FireEventStore());  
 }
 
 class MyHomePage extends StatefulWidget {

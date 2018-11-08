@@ -1,33 +1,40 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:homekeeper/model/category.dart';
 import 'package:homekeeper/model/event.dart';
 import 'package:homekeeper/repo/event/eventstore.dart';
 
 class MockEventStore implements EventStore {
+  
   MockEventStore();
 
+  final Duration _interval = Duration(milliseconds: 200);
   final cEvents =  [
     Event(
       title: 'first',
-      category: EventCategory.hydrofor,
+      category: EventCategory.hydrofor.name,
       occurenceDate: DateTime.now(),
-      reoccurenceDaysCount: 90
+      isReoccurence: true,
+      reoccurenceDaysCount: 90,
     ),
     Event(
       title: 'second',
-      category: EventCategory.rekuperator,
+      category: EventCategory.rekuperator.name,
       occurenceDate: DateTime.now().add(Duration(days: 20)),
+      isReoccurence: true,
       reoccurenceDaysCount: 365
     ),
     Event(
       title: 'third',
-      category: EventCategory.scieki,
+      category: EventCategory.scieki.name,
       occurenceDate: DateTime.now().add(Duration(days: 30)),
+      isReoccurence: true,
       reoccurenceDaysCount: 30
     )
   ];
 
   @override
-  String createEvent(Event event) {
+  Future<String> createEvent(Event event) async{
+    cEvents.add(event);
     return "1234";
   }
 
@@ -37,13 +44,14 @@ class MockEventStore implements EventStore {
   }
 
   @override
-  List<Event> getEvents() {
-    return cEvents;
+  Stream<List<Event>> getEvents() async* {
+    await Future.delayed(_interval);
+    yield cEvents;
   }
 
   @override
-  Event updateEvent(String eventID, Event updatedEvent) {
-    return updatedEvent;
+  Future updateEvent(Event updatedEvent) async{
+    await Future.delayed(_interval);
   }
 
 }

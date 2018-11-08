@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "674807411604",
+    "firebase_url": "https://zaya-homekeeper.firebaseio.com",
+    "project_id": "zaya-homekeeper",
+    "storage_bucket": "zaya-homekeeper.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674807411604:android:f2d3f5118fd0e36f",
+        "android_client_info": {
+          "package_name": "com.zayasoft.homekeeper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "674807411604-jet3u1oapr71ql0u3elemnaiqc9g8reo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDd4n1bSQtd7SfSpPOnon1cJPMK0a5JFJg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

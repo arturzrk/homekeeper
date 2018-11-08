@@ -1,4 +1,4 @@
-package com.example.homekeeper;
+package com.zayasoft.homekeeper;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
