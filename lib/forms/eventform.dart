@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:homekeeper/model/category.dart';
@@ -8,6 +9,10 @@ import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:intl/intl.dart';
 
 class EventForm extends StatefulWidget {
+  final Event event;
+  
+  EventForm({Key key, this.event}):super(key: key);
+
   @override
   EventFormState createState() {
     return new EventFormState();
@@ -19,10 +24,13 @@ class EventFormState extends State<EventForm> {
   final _formkey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final Injector injector = Injector.getInjector();
-  Event _formData = new Event();
+  Event _formData;
+  String _formTitle = 'New Event';
+  DocumentReference reference;
   EventStore _service;
 
   Future<Null> _selectDate(BuildContext context,ValueChanged<DateTime> selectDate) async {
+    
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -37,9 +45,16 @@ class EventFormState extends State<EventForm> {
   void initState() {
     super.initState();
     _service = injector.get<EventStore>();
-    setState(() {
-          
-        });
+    if(widget.event != null) {
+      setState(() {
+        _formData = widget.event;
+        _formTitle = 'Update Event';
+      }); 
+    } else
+    {
+      _formData = new Event();
+    }
+
   }
 
   @override
@@ -47,7 +62,7 @@ class EventFormState extends State<EventForm> {
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: Text('New Event')
+          title: Text(_formTitle)
         ),
         body: DropdownButtonHideUnderline(
           child: SafeArea(
@@ -65,6 +80,7 @@ class EventFormState extends State<EventForm> {
                       contentPadding: EdgeInsets.all(20.0),
                     ),
                     maxLines: 5,
+                    initialValue: _formData.title,
                     validator: _validateTextBoxEntry,
                     style: Theme.of(context).textTheme.display1,
                     onSaved: (value) { _formData.title = value; },
@@ -120,7 +136,7 @@ class EventFormState extends State<EventForm> {
                     decoration: InputDecoration(
                       labelText: 'Cycle Days'
                     ),
-                    initialValue: '0',
+                    initialValue: _formData.reoccurenceDaysCount.toString(),
                     keyboardType: TextInputType.number,
                     onSaved: (String value) {
                       setState(() {
@@ -153,11 +169,19 @@ class EventFormState extends State<EventForm> {
 
   void _onSubmitPressed() async{
     if (_formkey.currentState.validate()) {
-      _formkey.currentState.save();
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(content: Text('Processing Data..Event to happen on ${_formData.occurenceDate}, title = ${_formData.title}, reocurence ? ${_formData.isReoccurence}, cycle = ${_formData.reoccurenceDaysCount}')));
-      await _service.createEvent(_formData);
+      await _saveFormData();
       Navigator.pop(context);
     }
+  }
+
+  Future _saveFormData() async {
+    _formkey.currentState.save();
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(content: Text('Processing Data..Event to happen on ${_formData.occurenceDate}, title = ${_formData.title}, reocurence ? ${_formData.isReoccurence}, cycle = ${_formData.reoccurenceDaysCount}')));
+    
+    if(_formData.reference == null)
+     await _service.createEvent(_formData);
+    else
+      await _service.updateEvent(_formData);
   }
 }

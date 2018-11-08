@@ -6,7 +6,7 @@ class FireEventStore implements EventStore {
   @override
   Future<String> createEvent(Event event) async{
     final ref = Firestore.instance.collection('event').document();
-    await ref.setData(event.toMap(event)); 
+    await ref.setData(event.toMap()); 
     return ref.documentID;
   }
 
@@ -28,9 +28,7 @@ class FireEventStore implements EventStore {
   }
 
   @override
-  Event updateEvent(String eventID, Event updatedEvent) {
-    // TODO: implement updateEvent
-    return null;
+  Future updateEvent(Event updatedEvent) async{
+     await updatedEvent.reference.updateData(updatedEvent.toMap());
   }
-
 }

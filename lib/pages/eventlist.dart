@@ -78,8 +78,13 @@ class EventListPageState extends State<EventListPage> {
         event.title,
         style: _biggerFont,
       ),
-      subtitle: buildEventSubtitle(event), 
+      subtitle: buildEventSubtitle(event),
+      trailing: Icon(Icons.chevron_right),
       onTap: () {
+        Navigator.push(
+          context, 
+          MaterialPageRoute( builder: (context) => EventForm(event: event))
+        );
         _scaffoldKey.currentState.showSnackBar(
           SnackBar(content: Text('Event reference: ${event.reference.documentID}'))
         );
