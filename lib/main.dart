@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:homekeeper/app_config.dart';
 import 'package:homekeeper/pages/eventlist.dart';
-import 'package:homekeeper/repo/event/eventstore.dart';
-import 'package:homekeeper/repo/event/fireeventstore.dart';
-import 'package:homekeeper/repo/event/mockeventstore.dart';
-
-Future main() async { 
-  setupDependencies();
-  runApp(new MyApp());
-}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    var config = AppConfig.of(context);
     return new MaterialApp(
-      title: 'Home Keeper',
+      title: config.appTitle,
       theme: new ThemeData(
         // This is the theme of your application.
         //
@@ -30,11 +23,6 @@ class MyApp extends StatelessWidget {
       home: new EventListPage(),
     );
   }
-}
-
-void setupDependencies() {
-  final Injector injector = Injector.getInjector();
-  injector.map<EventStore>((i) => new FireEventStore());  
 }
 
 class MyHomePage extends StatefulWidget {
