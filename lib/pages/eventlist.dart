@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:homekeeper/model/category.dart';
 import 'package:homekeeper/model/event.dart';
-import 'package:homekeeper/repo/event/eventstore.dart';
-import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:homekeeper/forms/eventform.dart';
+import 'package:homekeeper/repo/event/eventstore.dart';
 
 
 class EventListPage extends StatefulWidget {
+  final EventStore service;
+
+  EventListPage({this.service});
+
   @override
   EventListPageState createState() {
     return new EventListPageState();
@@ -16,16 +19,12 @@ class EventListPage extends StatefulWidget {
 class EventListPageState extends State<EventListPage> {
 
   final List<Event> events = <Event>[];
-  final Injector injector = Injector.getInjector();
   final TextStyle _biggerFont = const TextStyle(fontSize: 18.0);
   final   _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  EventStore service;
 
   @override
   void initState() {
     super.initState();
-    service = injector.get<EventStore>();
     setState(() {
           
         });
@@ -43,7 +42,16 @@ class EventListPageState extends State<EventListPage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute( builder: (context) => EventForm())
+            MaterialPageRoute( 
+              builder: (context) => EventForm(
+                event: new Event(isReoccurence: false),
+                onSubmit: (event) {
+                  setState(() {
+                    widget.service.createEvent(event);                                      
+                  });
+                }
+              )
+            )
           );
         },
         tooltip: 'Add New Event',
@@ -54,7 +62,7 @@ class EventListPageState extends State<EventListPage> {
 
   Widget buildBody() {
     return StreamBuilder<List<Event>>(
-      stream: service.getEvents(),
+      stream:  widget.service.getEvents(),
       builder: (context, snapshot) {
         if(!snapshot.hasData) 
           return LinearProgressIndicator();
@@ -83,7 +91,16 @@ class EventListPageState extends State<EventListPage> {
       onTap: () {
         Navigator.push(
           context, 
-          MaterialPageRoute( builder: (context) => EventForm(event: event))
+          MaterialPageRoute( 
+            builder: (context) => EventForm(
+              event: event,
+              onSubmit: (event) {
+                setState(() {
+                  widget.service.updateEvent(event);
+                });
+              }
+            )
+          )
         );
         _scaffoldKey.currentState.showSnackBar(
           SnackBar(content: Text('Event reference: ${event.reference.documentID}'))
