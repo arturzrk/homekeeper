@@ -60,11 +60,7 @@ class EventFormState extends State<EventForm> {
         appBar: AppBar(
           title: Text(_formTitle)
         ),
-        body: DropdownButtonHideUnderline(
-          child: SafeArea(
-            top: false,
-            bottom: false,
-            child: Form(
+        body: Form(
               key: _formkey,
               child: ListView(
                 padding: EdgeInsets.all(16.0),
@@ -79,7 +75,7 @@ class EventFormState extends State<EventForm> {
                     maxLines: 2,
                     initialValue: _formData.title,
                     validator: _validateTextBoxEntry,
-                    style: Theme.of(context).textTheme.display1,
+                    style: Theme.of(context).textTheme.title,
                     onSaved: (value) { _formData.title = value; },
                   ),
                   InputDropDown(
@@ -153,8 +149,6 @@ class EventFormState extends State<EventForm> {
                 ]
               )
             )
-          )
-        )
     );
   }
 

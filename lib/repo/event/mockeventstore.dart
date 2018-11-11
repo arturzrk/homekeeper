@@ -3,8 +3,6 @@ import 'package:homekeeper/model/event.dart';
 import 'package:homekeeper/repo/event/eventstore.dart';
 
 class MockEventStore implements EventStore {
-  
-  MockEventStore();
 
   final Duration _interval = Duration(milliseconds: 200);
   final cEvents =  [
@@ -44,7 +42,6 @@ class MockEventStore implements EventStore {
 
   @override
   Stream<List<Event>> getEvents() async* {
-    await Future.delayed(_interval);
     yield cEvents;
   }
 

@@ -3,28 +3,31 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:homekeeper/forms/eventform.dart';
 import 'package:homekeeper/model/event.dart';
 
+const String EVENT_TITLE = 'Testing Event Form.';
+
 void main() {
-  testWidgets('EventList test to check lines and add button',
-      (WidgetTester tester) async {
+  testWidgets('EventForm test', (WidgetTester tester) async {
     var event = new Event(
       isReoccurence: true,
-      title: 'Testing event form',
+      title: 'Title before update',
       occurenceDate: DateTime.now(),
       category: 'Inne',
       reoccurenceDaysCount: 10,
     );
     Event targetEvent;
     EventForm page = new EventForm(
-      event: event,
-      onSubmit: (event) {
-        targetEvent = event;
-      });
+        event: event,
+        onSubmit: (event) {
+          targetEvent = event;
+        });
+
     await tester.pumpWidget(makeTestableWidget(page: page));
-    await tester.pump();
-    expect(find.byKey(Key('submit-button')), findsOneWidget);
+    await tester.enterText(find.byKey(Key('title-text-field')), EVENT_TITLE);
+    await tester.tap(find.byKey(Key('submit-button')));
+    expect(targetEvent.title, equals(EVENT_TITLE));
   });
 }
 
 Widget makeTestableWidget({Widget page}) {
-  return MaterialApp(home: page);
+  return new MaterialApp(home: page);
 }
