@@ -3,15 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:homekeeper/model/category.dart';
 import 'package:homekeeper/model/event.dart';
-import 'package:homekeeper/repo/event/eventstore.dart';
 import 'package:homekeeper/widgets/inputdropdown.dart';
-import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:intl/intl.dart';
 
 class EventForm extends StatefulWidget {
   final Event event;
+  final void Function(Event event) onSubmit;
   
-  EventForm({Key key, this.event}):super(key: key);
+  EventForm({Key key, this.event, this.onSubmit}):super(key: key);
 
   @override
   EventFormState createState() {
@@ -23,11 +22,9 @@ class EventFormState extends State<EventForm> {
 
   final _formkey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final Injector injector = Injector.getInjector();
   Event _formData;
   String _formTitle = 'New Event';
   DocumentReference reference;
-  EventStore _service;
 
   Future<Null> _selectDate(BuildContext context,ValueChanged<DateTime> selectDate) async {
     
@@ -44,7 +41,6 @@ class EventFormState extends State<EventForm> {
   @override
   void initState() {
     super.initState();
-    _service = injector.get<EventStore>();
     if(widget.event != null) {
       setState(() {
         _formData = widget.event;
@@ -74,12 +70,13 @@ class EventFormState extends State<EventForm> {
                 padding: EdgeInsets.all(16.0),
                 children: [
                   TextFormField(
+                    key: Key('title-text-field'),
                     decoration: InputDecoration(
                       labelText: 'Description of the task',
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.all(20.0),
                     ),
-                    maxLines: 5,
+                    maxLines: 2,
                     initialValue: _formData.title,
                     validator: _validateTextBoxEntry,
                     style: Theme.of(context).textTheme.display1,
@@ -148,6 +145,7 @@ class EventFormState extends State<EventForm> {
                   Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: RaisedButton(
+                        key: Key('submit-button'),
                         onPressed: _onSubmitPressed,
                         child: Text('Submit'),
                       ),
@@ -179,9 +177,7 @@ class EventFormState extends State<EventForm> {
     _scaffoldKey.currentState.showSnackBar(
       SnackBar(content: Text('Processing Data..Event to happen on ${_formData.occurenceDate}, title = ${_formData.title}, reocurence ? ${_formData.isReoccurence}, cycle = ${_formData.reoccurenceDaysCount}')));
     
-    if(_formData.reference == null)
-     await _service.createEvent(_formData);
-    else
-      await _service.updateEvent(_formData);
+    if(widget.onSubmit != null)
+       widget.onSubmit(_formData);
   }
 }

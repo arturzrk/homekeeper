@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:homekeeper/model/category.dart';
 import 'package:homekeeper/model/event.dart';
 import 'package:homekeeper/repo/event/eventstore.dart';
