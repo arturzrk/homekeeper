@@ -97,12 +97,14 @@ class EventFormState extends State<EventForm> {
                     ),
                     baseStyle: Theme.of(context).textTheme.title,
                     child: DropdownButton<String>(
+                      key: Key('category-dropdown'),
                       value: _formData.category,
                       onChanged: (String value) {
                         setState(() {_formData.category = value;});
                       },
                       items: EventCategory.eventCategories.map( (category) {
                        return DropdownMenuItem<String>(
+                         key: Key('category-${category.name}'),
                          value: category.name,
                          child: Text(category.name),
                        );
