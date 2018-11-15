@@ -4,8 +4,15 @@ import 'package:homekeeper/app_config.dart';
 import 'package:homekeeper/pages/eventlist.dart';
 import 'package:homekeeper/repo/event/eventstore.dart';
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
 
+  @override
+  MyAppState createState() {
+    return new MyAppState();
+  }
+}
+
+class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     var config = AppConfig.of(context);

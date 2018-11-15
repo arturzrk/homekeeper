@@ -79,6 +79,7 @@ class EventFormState extends State<EventForm> {
                     onSaved: (value) { _formData.title = value; },
                   ),
                   InputDropDown(
+                    key: Key('occurence-date'),
                     labelText: 'When',
                     valueText: _formData.occurenceDate == null ? 'null' : DateFormat.yMMMd().format(_formData.occurenceDate),
                     valueStyle: Theme.of(context).textTheme.title,
@@ -121,8 +122,9 @@ class EventFormState extends State<EventForm> {
                       builder: (FormFieldState state) {
                         return MergeSemantics(
                           child: Switch(
-                          value: _formData.isReoccurence,
-                          onChanged: (bool value) { setState(() {_formData.isReoccurence = value;});}
+                            key: Key('auto-repeat'),
+                            value: _formData.isReoccurence,
+                            onChanged: (bool value) { setState(() {_formData.isReoccurence = value;});}
                           )
                         );
                       })
@@ -131,6 +133,7 @@ class EventFormState extends State<EventForm> {
                     decoration: InputDecoration(
                       labelText: 'Cycle Days'
                     ),
+                    key: Key('cycle-days'),
                     initialValue: _formData.reoccurenceDaysCount.toString(),
                     keyboardType: TextInputType.number,
                     onSaved: (String value) {
