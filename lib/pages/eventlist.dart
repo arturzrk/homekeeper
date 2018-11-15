@@ -115,10 +115,9 @@ class EventListPageState extends State<EventListPage> {
   }
 
   Icon _iconForCategory(String category) {
-    EventCategory.eventCategories.forEach((cat) {
+    for(EventCategory cat in EventCategory.eventCategories) 
       if(cat.name == category) 
         return cat.icon;
-    });
     return null;
   }
 }
