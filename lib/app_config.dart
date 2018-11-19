@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:homekeeper/repo/event/eventstore.dart';
-import 'package:homekeeper/repo/event/fireeventstore.dart';
-import 'package:homekeeper/repo/event/mockeventstore.dart';
+import 'package:homekeeper/repo/template/templatestore.dart';
+import 'package:homekeeper/repo/template/firetemplatestore.dart';
+import 'package:homekeeper/repo/template/mocktemplatestore.dart';
 import 'package:meta/meta.dart';
 
 class AppConfig extends InheritedWidget {
@@ -33,11 +33,11 @@ class AppConfig extends InheritedWidget {
 
   void setupDevDependencies() {
     final Injector injector = Injector.getInjector();
-    injector.map<EventStore>((i) => new MockEventStore());
+    injector.map<TemplateStore>((i) => new MockTemplateStore());
   }
 
   void setupProdDependencies() {
     final Injector injector = Injector.getInjector();
-    injector.map<EventStore>((i) => new FireEventStore());
+    injector.map<TemplateStore>((i) => new FireTemplateStore());
   }
 }

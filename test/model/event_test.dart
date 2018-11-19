@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:homekeeper/model/event.dart';
+import 'package:homekeeper/model/template.dart';
 
 const String MAP_TITLE = 'main title';
 const String MAP_CATEGORY = 'map_category';
@@ -18,7 +18,7 @@ void main() {
     map['reoccurenceDaysCount'] = MAP_REOCCURENCEDAYSCOUNT;
 
     //When
-    var event = Event.fromMap(map);
+    var event = Template.fromMap(map);
 
     //Then
     expect(event.title, equals(MAP_TITLE));
@@ -30,7 +30,7 @@ void main() {
 
   test('Given_Event_When_toMap_CorrectMapIsReturned' , () {
     //given
-    var event = Event(
+    var event = Template(
       title: MAP_TITLE,
       category: MAP_CATEGORY,
       isReoccurence: MAP_IS_REOCCURENCE,
