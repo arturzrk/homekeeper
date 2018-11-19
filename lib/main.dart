@@ -1,23 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:homekeeper/app_config.dart';
-import 'package:homekeeper/pages/eventlist.dart';
-import 'package:homekeeper/repo/event/eventstore.dart';
+import 'package:homekeeper/pages/navigationpage.dart';
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
 
-  @override
-  MyAppState createState() {
-    return new MyAppState();
-  }
-}
-
-class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     var config = AppConfig.of(context);
-    var injector = Injector.getInjector();
-    var eventService = injector.get<EventStore>();
     return new MaterialApp(
       title: config.appTitle,
       theme: new ThemeData(
@@ -31,9 +20,7 @@ class MyAppState extends State<MyApp> {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      //home: new EventListPage(service: eventService),
-      home: EventListPage(service: eventService)
+      home: NavigationPage()
     );
   }
 }
-

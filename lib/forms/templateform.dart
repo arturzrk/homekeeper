@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:homekeeper/model/category.dart';
-import 'package:homekeeper/model/event.dart';
+import 'package:homekeeper/model/template.dart';
 import 'package:homekeeper/widgets/inputdropdown.dart';
 import 'package:intl/intl.dart';
 
 class EventForm extends StatefulWidget {
-  final Event event;
-  final void Function(Event event) onSubmit;
+  final Template event;
+  final void Function(Template event) onSubmit;
   
   EventForm({Key key, this.event, this.onSubmit}):super(key: key);
 
@@ -22,15 +22,15 @@ class EventFormState extends State<EventForm> {
 
   final _formkey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  Event _formData;
-  String _formTitle = 'New Event';
+  Template _formData;
+  String _formTitle = 'New Event Template';
   DocumentReference reference;
 
   Future<Null> _selectDate(BuildContext context,ValueChanged<DateTime> selectDate) async {
     
     final DateTime picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: _formData.occurenceDate,
       firstDate: DateTime(2015, 8),
       lastDate: DateTime(2101)
     );
@@ -41,16 +41,18 @@ class EventFormState extends State<EventForm> {
   @override
   void initState() {
     super.initState();
-    if(widget.event != null) {
-      setState(() {
-        _formData = widget.event;
-        _formTitle = 'Update Event';
-      }); 
-    } else
-    {
-      _formData = new Event();
-    }
-
+    setState(() {
+      if(widget.event != null) {
+          _formData = widget.event;
+          _formTitle = 'Update Event Template';
+        }
+        else {
+          _formData = new Template();
+          _formData.occurenceDate = DateTime.now();
+          _formData.isReoccurence = false;
+          _formData.reoccurenceDaysCount = 0;
+        }
+    }); 
   }
 
   @override
@@ -123,7 +125,7 @@ class EventFormState extends State<EventForm> {
                         return MergeSemantics(
                           child: Switch(
                             key: Key('auto-repeat'),
-                            value: _formData.isReoccurence,
+                            value: _formData.isReoccurence != null? _formData.isReoccurence : false,
                             onChanged: (bool value) { setState(() {_formData.isReoccurence = value;});}
                           )
                         );

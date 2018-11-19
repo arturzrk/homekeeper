@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:homekeeper/model/category.dart';
-import 'package:homekeeper/model/event.dart';
-import 'package:homekeeper/forms/eventform.dart';
-import 'package:homekeeper/repo/event/eventstore.dart';
+import 'package:homekeeper/model/template.dart';
+import 'package:homekeeper/forms/templateform.dart';
+import 'package:homekeeper/repo/template/templatestore.dart';
 
 
-class EventListPage extends StatefulWidget {
-  final EventStore service;
+class TemplateListPage extends StatefulWidget {
+  final TemplateStore service;
 
-  EventListPage({this.service});
+  TemplateListPage({this.service});
 
   @override
-  EventListPageState createState() {
-    return new EventListPageState();
+  TemplateListPageState createState() {
+    return new TemplateListPageState();
   }
 }
 
-class EventListPageState extends State<EventListPage> {
+class TemplateListPageState extends State<TemplateListPage> {
 
-  final List<Event> events = <Event>[];
+  final List<Template> templates = <Template>[];
   final TextStyle _biggerFont = const TextStyle(fontSize: 18.0);
   final   _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -34,9 +34,6 @@ class EventListPageState extends State<EventListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: new AppBar(
-       title: new Text('Event List'),
-      ),
      body:  buildBody(),
      floatingActionButton: new FloatingActionButton(
         onPressed: () {
@@ -44,10 +41,9 @@ class EventListPageState extends State<EventListPage> {
             context,
             MaterialPageRoute( 
               builder: (context) => EventForm(
-                event: new Event(isReoccurence: false),
                 onSubmit: (event) {
                   setState(() {
-                    widget.service.createEvent(event);                                      
+                    widget.service.createTemplate(event);                                      
                   });
                 }
               )
@@ -61,8 +57,8 @@ class EventListPageState extends State<EventListPage> {
   }
 
   Widget buildBody() {
-    return StreamBuilder<List<Event>>(
-      stream:  widget.service.getEvents(),
+    return StreamBuilder<List<Template>>(
+      stream:  widget.service.getTemplates(),
       builder: (context, snapshot) {
         if(!snapshot.hasData) 
           return LinearProgressIndicator();
@@ -72,14 +68,14 @@ class EventListPageState extends State<EventListPage> {
     );
   }
 
-  Widget buildEventList(BuildContext context, List<Event> snapshot) {
+  Widget buildEventList(BuildContext context, List<Template> snapshot) {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       children: snapshot.map((data) => buildEventRow(context, data)).toList()
     );
   }
 
-  Widget buildEventRow(BuildContext context, Event event) {
+  Widget buildEventRow(BuildContext context, Template event) {
     return ListTile(
       leading: _iconForCategory(event.category),
       title: Text(
@@ -96,7 +92,7 @@ class EventListPageState extends State<EventListPage> {
               event: event,
               onSubmit: (event) {
                 setState(() {
-                  widget.service.updateEvent(event);
+                  widget.service.updateTemplate(event);
                 });
               }
             )
@@ -109,7 +105,7 @@ class EventListPageState extends State<EventListPage> {
     );
   }
 
-  Widget buildEventSubtitle(Event event) {
+  Widget buildEventSubtitle(Template event) {
     return Text('${event.occurenceDate.difference(DateTime.now()).inDays} days till next occurence.'
     );
   }

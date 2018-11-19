@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Event {
+class Template {
   String title;
   String category;
   DateTime occurenceDate;
   bool isReoccurence = false;
   int reoccurenceDaysCount;
   DocumentReference reference;
-  Event({this.title, this.category, this.occurenceDate, this.reoccurenceDaysCount, this.isReoccurence, this.reference});
+  Template({this.title, this.category, this.occurenceDate, this.reoccurenceDaysCount, this.isReoccurence, this.reference});
 
-  Event.fromMap(Map<String, dynamic> map, {this.reference})
+  Template.fromMap(Map<String, dynamic> map, {this.reference})
      : assert(map['title'] != null),
        assert(map['category'] != null),
        assert(map['occurenceDate'] != null),
@@ -19,7 +19,7 @@ class Event {
        isReoccurence = map['isReoccurence'],
        reoccurenceDaysCount = map['reoccurenceDaysCount'];
 
-  Event.fromSnapshot(DocumentSnapshot snapshot)
+  Template.fromSnapshot(DocumentSnapshot snapshot)
     :this.fromMap(snapshot.data, reference: snapshot.reference);
 
   Map<String, dynamic>  toMap() {
