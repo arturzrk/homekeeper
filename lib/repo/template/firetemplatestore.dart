@@ -5,19 +5,19 @@ import 'package:homekeeper/repo/template/templatestore.dart';
 class FireTemplateStore implements TemplateStore {
   @override
   Future<String> createTemplate(Template template) async{
-    final ref = Firestore.instance.collection('event').document();
+    final ref = Firestore.instance.collection('template').document();
     await ref.setData(template.toMap()); 
     return ref.documentID;
   }
 
   @override
   void deleteTemplate(String templateID) {
-    // TODO: implement deleteTemplate
+    
   }
 
   @override
   Stream<List<Template>> getTemplates() async* {
-    final snapshotStream = Firestore.instance.collection('event').snapshots();
+    final snapshotStream = Firestore.instance.collection('template').snapshots();
     await for(var snapshot in snapshotStream) {
       var templateSnapshots = snapshot.documents;
       var x = templateSnapshots.map((document) {

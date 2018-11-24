@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:homekeeper/forms/taskform.dart';
 import 'package:homekeeper/model/category.dart';
-import 'package:homekeeper/model/template.dart';
-import 'package:homekeeper/forms/templateform.dart';
-import 'package:homekeeper/repo/template/templatestore.dart';
+import 'package:homekeeper/model/task.dart';
+import 'package:homekeeper/repo/task/taskstore.dart';
 
 
-class TemplateListPage extends StatefulWidget {
-  final TemplateStore service;
+class TaskListPage extends StatefulWidget {
+  final TaskStore service;
 
-  TemplateListPage({this.service});
+  TaskListPage({this.service});
 
   @override
-  TemplateListPageState createState() {
-    return new TemplateListPageState();
+  TaskListPageState createState() {
+    return new TaskListPageState();
   }
 }
 
-class TemplateListPageState extends State<TemplateListPage> {
+class TaskListPageState extends State<TaskListPage> {
 
-  final List<Template> templates = <Template>[];
+  final List<Task> tasks = <Task>[];
   final TextStyle _biggerFont = const TextStyle(fontSize: 18.0);
   final   _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -40,73 +40,73 @@ class TemplateListPageState extends State<TemplateListPage> {
           Navigator.push(
             context,
             MaterialPageRoute( 
-              builder: (context) => EventForm(
-                onSubmit: (event) {
+              builder: (context) => TaskForm(
+                onSubmit: (task) {
                   setState(() {
-                    widget.service.createTemplate(event);                                      
+                    widget.service.createTask(task);                                      
                   });
                 }
               )
             )
           );
         },
-        tooltip: 'Add New Event',
+        tooltip: 'Add a New Task',
         child: new Icon(Icons.add),
       ),
     );
   }
 
   Widget buildBody() {
-    return StreamBuilder<List<Template>>(
-      stream:  widget.service.getTemplates(),
+    return StreamBuilder<List<Task>>(
+      stream:  widget.service.getTasks(),
       builder: (context, snapshot) {
         if(!snapshot.hasData) 
           return LinearProgressIndicator();
         
-        return buildEventList(context, snapshot.data);
+        return buildTaskList(context, snapshot.data);
       },
     );
   }
 
-  Widget buildEventList(BuildContext context, List<Template> snapshot) {
+  Widget buildTaskList(BuildContext context, List<Task> snapshot) {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      children: snapshot.map((data) => buildEventRow(context, data)).toList()
+      children: snapshot.map((data) => buildTaskRow(context, data)).toList()
     );
   }
 
-  Widget buildEventRow(BuildContext context, Template event) {
+  Widget buildTaskRow(BuildContext context, Task task) {
     return ListTile(
-      leading: _iconForCategory(event.category),
+      leading: _iconForCategory(task.category),
       title: Text(
-        event.title,
+        task.title,
         style: _biggerFont,
       ),
-      subtitle: buildEventSubtitle(event),
+      subtitle: buildEventSubtitle(task),
       trailing: Icon(Icons.chevron_right),
       onTap: () {
         Navigator.push(
           context, 
           MaterialPageRoute( 
-            builder: (context) => EventForm(
-              template: event,
-              onSubmit: (event) {
+            builder: (context) => TaskForm(
+              task: task,
+              onSubmit: (task) {
                 setState(() {
-                  widget.service.updateTemplate(event);
+                  widget.service.updateTask(task);
                 });
               }
             )
           )
         );
         _scaffoldKey.currentState.showSnackBar(
-          SnackBar(content: Text('Event reference: ${event.reference.documentID}'))
+          SnackBar(content: Text('Event reference: ${task.reference.documentID}'))
         );
       },
     );
   }
 
-  Widget buildEventSubtitle(Template event) {
-    return Text('${event.occurenceDate.difference(DateTime.now()).inDays} days till next occurence.'
+  Widget buildEventSubtitle(Task task) {
+    return Text('Due to start in ${task.startDate.difference(DateTime.now()).inDays} days.'
     );
   }
 

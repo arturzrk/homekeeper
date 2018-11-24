@@ -8,21 +8,21 @@ class MockTemplateStore implements TemplateStore {
   final cEvents =  [
     Template(
       title: 'first',
-      category: EventCategory.hydrofor.name,
+      category: TemplateCategory.hydrofor.name,
       occurenceDate: DateTime.now(),
       isReoccurence: true,
       reoccurenceDaysCount: 90,
     ),
     Template(
       title: 'second',
-      category: EventCategory.rekuperator.name,
+      category: TemplateCategory.rekuperator.name,
       occurenceDate: DateTime.now().add(Duration(days: 20)),
       isReoccurence: true,
       reoccurenceDaysCount: 365
     ),
     Template(
       title: 'third',
-      category: EventCategory.scieki.name,
+      category: TemplateCategory.scieki.name,
       occurenceDate: DateTime.now().add(Duration(days: 30)),
       isReoccurence: true,
       reoccurenceDaysCount: 30

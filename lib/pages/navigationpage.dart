@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:homekeeper/pages/eventtemplates.dart';
+import 'package:homekeeper/pages/tasks.dart';
+import 'package:homekeeper/repo/task/taskstore.dart';
 import 'package:homekeeper/repo/template/templatestore.dart';
 
 class NavigationTabBody {
@@ -22,13 +24,15 @@ class NavigationPage extends StatefulWidget {
 class NavigationPageState extends State<NavigationPage> with TickerProviderStateMixin {
 
   int _currentIndex = 0;
-  TemplateStore _service;
+  TemplateStore _templateService;
+  TaskStore _taskService;
 
   @override
   void initState() {
       super.initState();
       var injector = Injector.getInjector();
-      _service = injector.get<TemplateStore>();
+      _templateService = injector.get<TemplateStore>();
+      _taskService = injector.get<TaskStore>();
   }
 
   @override
@@ -42,16 +46,15 @@ class NavigationPageState extends State<NavigationPage> with TickerProviderState
     final List<NavigationTabBody> _navigationBodies = <NavigationTabBody>
       [
         NavigationTabBody( 
-          title: 'Home tab',
-          child: Icon(
-            Icons.home,
-            size: 200
+          title: 'Tasks List',
+          child: TaskListPage(
+            service: _taskService
           )
         ),
         NavigationTabBody(
           title: 'Event Templates',
           child: TemplateListPage(
-            service: _service
+            service: _templateService
           )
         )
       ];

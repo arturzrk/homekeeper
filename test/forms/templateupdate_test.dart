@@ -21,7 +21,7 @@ void main() {
     );
     Template targetEvent;
     EventForm page = new EventForm(
-        event: event,
+        template: event,
         onSubmit: (event) {
           targetEvent = event;
         });
@@ -51,7 +51,7 @@ void main() {
     expect(targetEvent.title, equals(EVENT_TITLE));
     expect(targetEvent.category, 'Rekuperator');
     expect(targetEvent.isReoccurence, isFalse);
-    expect(targetEvent.occurenceDate.day, equals(13));
+      expect(targetEvent.occurenceDate.day, equals(13));
     expect(targetEvent.reoccurenceDaysCount, 100);
   });
 }
