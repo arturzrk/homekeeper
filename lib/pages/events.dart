@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:homekeeper/forms/taskform.dart';
+import 'package:homekeeper/forms/eventform.dart';
 import 'package:homekeeper/model/category.dart';
-import 'package:homekeeper/model/task.dart';
-import 'package:homekeeper/repo/task/taskstore.dart';
+import 'package:homekeeper/model/event.dart';
+import 'package:homekeeper/repo/event/eventstore.dart';
 
 
-class TaskListPage extends StatefulWidget {
-  final TaskStore service;
+class EventListPage extends StatefulWidget {
+  final EventStore service;
 
-  TaskListPage({this.service});
+  EventListPage({this.service});
 
   @override
-  TaskListPageState createState() {
-    return new TaskListPageState();
+  EventListPageState createState() {
+    return new EventListPageState();
   }
 }
 
-class TaskListPageState extends State<TaskListPage> {
+class EventListPageState extends State<EventListPage> {
 
-  final List<Task> tasks = <Task>[];
+  final List<Event> tasks = <Event>[];
   final TextStyle _biggerFont = const TextStyle(fontSize: 18.0);
   final   _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -40,10 +40,10 @@ class TaskListPageState extends State<TaskListPage> {
           Navigator.push(
             context,
             MaterialPageRoute( 
-              builder: (context) => TaskForm(
+              builder: (context) => EventForm(
                 onSubmit: (task) {
                   setState(() {
-                    widget.service.createTask(task);                                      
+                    widget.service.createEvent(task);
                   });
                 }
               )
@@ -57,8 +57,8 @@ class TaskListPageState extends State<TaskListPage> {
   }
 
   Widget buildBody() {
-    return StreamBuilder<List<Task>>(
-      stream:  widget.service.getTasks(),
+    return StreamBuilder<List<Event>>(
+      stream:  widget.service.getEvents(),
       builder: (context, snapshot) {
         if(!snapshot.hasData) 
           return LinearProgressIndicator();
@@ -68,14 +68,14 @@ class TaskListPageState extends State<TaskListPage> {
     );
   }
 
-  Widget buildTaskList(BuildContext context, List<Task> snapshot) {
+  Widget buildTaskList(BuildContext context, List<Event> snapshot) {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       children: snapshot.map((data) => buildTaskRow(context, data)).toList()
     );
   }
 
-  Widget buildTaskRow(BuildContext context, Task task) {
+  Widget buildTaskRow(BuildContext context, Event task) {
     return ListTile(
       leading: _iconForCategory(task.category),
       title: Text(
@@ -88,11 +88,11 @@ class TaskListPageState extends State<TaskListPage> {
         Navigator.push(
           context, 
           MaterialPageRoute( 
-            builder: (context) => TaskForm(
-              task: task,
+            builder: (context) => EventForm(
+              event: task,
               onSubmit: (task) {
                 setState(() {
-                  widget.service.updateTask(task);
+                  widget.service.updateEvent(task);
                 });
               }
             )
@@ -105,7 +105,7 @@ class TaskListPageState extends State<TaskListPage> {
     );
   }
 
-  Widget buildEventSubtitle(Task task) {
+  Widget buildEventSubtitle(Event task) {
     return Text('Due to start in ${task.startDate.difference(DateTime.now()).inDays} days.'
     );
   }

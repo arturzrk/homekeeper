@@ -1,22 +1,24 @@
-import 'package:homekeeper/model/category.dart';
-import 'package:homekeeper/model/task.dart';
-import 'package:homekeeper/repo/task/taskstore.dart';
+import 'dart:async';
 
-class MockTaskStore implements TaskStore {
+import 'package:homekeeper/model/category.dart';
+import 'package:homekeeper/model/event.dart';
+import 'package:homekeeper/repo/event/eventstore.dart';
+
+class MockEventStore implements EventStore {
 
   final Duration _interval = Duration(milliseconds: 200);
   final _tasks =  [
-    Task(
+    Event(
       title: 'first',
       category: TemplateCategory.hydrofor.name,
       startDate: DateTime.now(),
     ),
-    Task(
+    Event(
       title: 'second',
       category: TemplateCategory.rekuperator.name,
       startDate: DateTime.now().add(Duration(days: 20)),
     ),
-    Task(
+    Event(
       title: 'third',
       category: TemplateCategory.scieki.name,
       startDate: DateTime.now().add(Duration(days: 30)),
@@ -24,23 +26,22 @@ class MockTaskStore implements TaskStore {
   ];
 
   @override
-  Future<String> createTask(Task task) async{
-    _tasks.add(task);
+  Future<String> createEvent(Event event) async{
+    _tasks.add(event);
     return "1234";
   }
 
   @override
-  void deleteTask(String taskID) {
-    return;
+  Future deleteEvent(Event eventToDelete) async {
   }
 
   @override
-  Stream<List<Task>> getTasks() async* {
+  Stream<List<Event>> getEvents() async* {
     yield _tasks;
   }
 
   @override
-  Future updateTask(Task updatedEvent) async{
+  Future updateEvent(Event updatedEvent) async{
     await Future.delayed(_interval);
   }
 }

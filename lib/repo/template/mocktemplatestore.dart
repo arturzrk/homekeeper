@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:homekeeper/model/category.dart';
 import 'package:homekeeper/model/template.dart';
 import 'package:homekeeper/repo/template/templatestore.dart';
@@ -36,7 +38,7 @@ class MockTemplateStore implements TemplateStore {
   }
 
   @override
-  void deleteTemplate(String eventID) {
+  Future deleteTemplate(Template templateToDelete) async {
     return;
   }
 

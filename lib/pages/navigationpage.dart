@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:homekeeper/pages/eventbuttons.dart';
 import 'package:homekeeper/pages/eventtemplates.dart';
-import 'package:homekeeper/pages/tasks.dart';
-import 'package:homekeeper/repo/task/taskstore.dart';
+import 'package:homekeeper/pages/events.dart';
+import 'package:homekeeper/repo/event/eventstore.dart';
 import 'package:homekeeper/repo/template/templatestore.dart';
 
 class NavigationTabBody {
@@ -18,21 +19,20 @@ class NavigationPage extends StatefulWidget {
   State<StatefulWidget> createState() {
     return NavigationPageState();
   }
-
 }
 
-class NavigationPageState extends State<NavigationPage> with TickerProviderStateMixin {
-
+class NavigationPageState extends State<NavigationPage>
+    with TickerProviderStateMixin {
   int _currentIndex = 0;
   TemplateStore _templateService;
-  TaskStore _taskService;
+  EventStore _taskService;
 
   @override
   void initState() {
-      super.initState();
-      var injector = Injector.getInjector();
-      _templateService = injector.get<TemplateStore>();
-      _taskService = injector.get<TaskStore>();
+    super.initState();
+    var injector = Injector.getInjector();
+    _templateService = injector.get<TemplateStore>();
+    _taskService = injector.get<EventStore>();
   }
 
   @override
@@ -42,56 +42,49 @@ class NavigationPageState extends State<NavigationPage> with TickerProviderState
 
   @override
   Widget build(BuildContext context) {
-
-    final List<NavigationTabBody> _navigationBodies = <NavigationTabBody>
-      [
-        NavigationTabBody( 
-          title: 'Tasks List',
-          child: TaskListPage(
-            service: _taskService
-          )
-        ),
-        NavigationTabBody(
+    final List<NavigationTabBody> _navigationBodies = <NavigationTabBody>[
+      NavigationTabBody(
+          title: 'Tap to trigger the Event',
+          child: EventButtons(templateService: _templateService)),
+      NavigationTabBody(
           title: 'Event Templates',
-          child: TemplateListPage(
-            service: _templateService
-          )
-        )
-      ];
+          child: TemplateListPage(service: _templateService)),
+      NavigationTabBody(
+        title: 'Event History',
+        child: EventListPage(service: _taskService),
+      ),
+    ];
 
     final BottomNavigationBar botNavBar = BottomNavigationBar(
-      items: [
-        BottomNavigationBarItem(
-          title: Text('Home'),
-          icon: Icon(Icons.home),
-          activeIcon: Icon(Icons.home),
-          backgroundColor: Colors.blue
-        ),
-        BottomNavigationBarItem(
-          title: Text('Library'),
-          icon: Icon(Icons.library_books),
-          activeIcon: Icon(Icons.library_books),
-          backgroundColor: Colors.blue
-        )
-      ],
-      type: BottomNavigationBarType.shifting,
-      currentIndex: _currentIndex,
-      onTap: (int index) {
-        setState(() {
-        _currentIndex = index;
+        items: [
+          BottomNavigationBarItem(
+              title: Text('Home'),
+              icon: Icon(Icons.home),
+              activeIcon: Icon(Icons.home),
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              title: Text('Templates'),
+              icon: Icon(Icons.collections),
+              activeIcon: Icon(Icons.collections),
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+            title: Text('Events'),
+            icon: Icon(Icons.list),
+            activeIcon: Icon(Icons.list),
+            backgroundColor: Colors.blue,
+          ),
+        ],
+        type: BottomNavigationBarType.shifting,
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
         });
-      }
-    );
-    
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_navigationBodies[_currentIndex].title)
-      ),
-      body: Center(
-        child: _navigationBodies[_currentIndex].child
-      ),
-      bottomNavigationBar: botNavBar
-    );
-  }
 
+    return Scaffold(
+        appBar: AppBar(title: Text(_navigationBodies[_currentIndex].title)),
+        body: Center(child: _navigationBodies[_currentIndex].child),
+        bottomNavigationBar: botNavBar);
+  }
 }
