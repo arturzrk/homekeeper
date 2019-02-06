@@ -71,3 +71,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
+  fonts:
+    - family: Raleway
+      fonts:
+        - asset: assets/third_party/Raleway-Regular.ttf

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +9,10 @@ import 'package:homekeeper/widgets/inputdropdown.dart';
 import 'package:intl/intl.dart';
 
 class EventForm extends StatefulWidget {
-  final Template event;
+  final Template template;
   final void Function(Template event) onSubmit;
   
-  EventForm({Key key, this.event, this.onSubmit}):super(key: key);
+  EventForm({Key key, this.template, this.onSubmit}):super(key: key);
 
   @override
   EventFormState createState() {
@@ -42,8 +44,8 @@ class EventFormState extends State<EventForm> {
   void initState() {
     super.initState();
     setState(() {
-      if(widget.event != null) {
-          _formData = widget.event;
+      if(widget.template != null) {
+          _formData = widget.template;
           _formTitle = 'Update Event Template';
         }
         else {
@@ -105,7 +107,7 @@ class EventFormState extends State<EventForm> {
                       onChanged: (String value) {
                         setState(() {_formData.category = value;});
                       },
-                      items: EventCategory.eventCategories.map( (category) {
+                      items: TemplateCategory.templateCategories.map( (category) {
                        return DropdownMenuItem<String>(
                          key: Key('category-${category.name}'),
                          value: category.name,
@@ -180,5 +182,6 @@ class EventFormState extends State<EventForm> {
     
     if(widget.onSubmit != null)
        widget.onSubmit(_formData);
+       
   }
 }
