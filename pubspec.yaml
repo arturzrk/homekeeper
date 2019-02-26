@@ -26,8 +26,14 @@ dependencies:
   mockito: ^4.0.0
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.7.0"
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: "launcher_icon" 
+  ios: true
+  image_path: "assets/icons/homekeeper_launcher.png"
 
 
 # For information on the generic Dart part of this file, see the

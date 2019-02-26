@@ -3,6 +3,7 @@ import 'package:homekeeper/forms/eventform.dart';
 import 'package:homekeeper/model/category.dart';
 import 'package:homekeeper/model/event.dart';
 import 'package:homekeeper/repo/event/eventstore.dart';
+import 'package:homekeeper/utils/history_describer.dart';
 
 
 class EventListPage extends StatefulWidget {
@@ -106,8 +107,7 @@ class EventListPageState extends State<EventListPage> {
   }
 
   Widget buildEventSubtitle(Event task) {
-    return Text('Due to start in ${task.startDate.difference(DateTime.now()).inDays} days.'
-    );
+    return Text('Occured ${HistoryDescriber.describe(task.startDate)}');
   }
 
   Icon _iconForCategory(String category) {

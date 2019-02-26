@@ -10,7 +10,8 @@ import 'package:intl/intl.dart';
 enum FormMode { New, Update }
 
 class EventForm extends StatefulWidget {
-  static String eventTitleRequiredValidationMessage = 'Event title is required.';
+  static String eventTitleRequiredValidationMessage =
+      'Event title is required.';
   static String eventCategoryRequiredValidationMessage =
       'Event Category needs to be selected.';
   static String newTitle = 'New Event';
@@ -65,7 +66,7 @@ class EventFormState extends State<EventForm> {
     return Scaffold(
         appBar: AppBar(title: Text(title)),
         body: Padding(
-           padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 8.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 8.0),
           child: Form(
               key: _formKey,
               child: ListView(children: [
@@ -92,7 +93,8 @@ class EventFormState extends State<EventForm> {
                         : DateFormat.yMMMd().format(_formData.startDate),
                     valueStyle: Theme.of(context).textTheme.title,
                     onPressed: () {
-                      _selectDate(context, _formData.startDate, (DateTime date) {
+                      _selectDate(context, _formData.startDate,
+                          (DateTime date) {
                         setState(() {
                           _formData.startDate = date;
                         });
@@ -102,14 +104,17 @@ class EventFormState extends State<EventForm> {
                   if (value == null || value.toString().isEmpty)
                     return EventForm.eventCategoryRequiredValidationMessage;
                   return null;
-                }, builder: (FormFieldState state) {
+                },
+                initialValue: _formData.category, 
+                builder: (FormFieldState state) {
                   final decoration = const InputDecoration(
                       labelText: 'Category',
                       hintText: 'Choose a category',
                       contentPadding: EdgeInsets.zero);
 
                   return InputDecorator(
-                      decoration: decoration.copyWith(errorText: state.errorText),
+                      decoration:
+                          decoration.copyWith(errorText: state.errorText),
                       baseStyle: Theme.of(context).textTheme.title,
                       child: DropdownButton<String>(
                           key: Key('category-dropdown'),
@@ -120,8 +125,8 @@ class EventFormState extends State<EventForm> {
                             });
                             state.didChange(value);
                           },
-                          items:
-                              TemplateCategory.templateCategories.map((category) {
+                          items: TemplateCategory.templateCategories
+                              .map((category) {
                             return DropdownMenuItem<String>(
                               key: Key('category-${category.name}'),
                               value: category.name,

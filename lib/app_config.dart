@@ -46,6 +46,6 @@ class AppConfig extends InheritedWidget {
   void setupProdDependencies() {
     final Injector injector = Injector.getInjector();
     injector.map<TemplateStore>((i) => new FireTemplateStore(accountName: globalState.accountName));
-    injector.map<EventStore>((i) => new FireEventStore());
+    injector.map<EventStore>((i) => new FireEventStore(accountName: globalState.accountName));
   }
 }

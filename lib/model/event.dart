@@ -14,7 +14,8 @@ class Event {
        assert(map['startDate'] != null),
        title = map['title'],
        category = map['category'],
-       startDate = map['startDate'];
+       startDate = map['startDate'],
+       templateReference = map['templateReference'] != null ? map['templateReference'] : null; 
        
   Event.fromSnapshot(DocumentSnapshot snapshot)
     :this.fromMap(snapshot.data, reference: snapshot.reference);
@@ -24,6 +25,7 @@ class Event {
     map['title'] = title;
     map['category'] = category;
     map['startDate'] = startDate;
+    map['templateReference'] = templateReference;
     return map;
   }
 }

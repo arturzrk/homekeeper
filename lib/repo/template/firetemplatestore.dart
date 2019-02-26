@@ -40,7 +40,5 @@ class FireTemplateStore implements TemplateStore {
     await updatedTemplate.reference.updateData(updatedTemplate.toMap());
   }
 
-  String getCollectionPath() {
-    return 'users/$accountName/template';
-  }
+  String getCollectionPath() => 'users/$accountName/template';
 }

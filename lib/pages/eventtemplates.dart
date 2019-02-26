@@ -4,7 +4,6 @@ import 'package:homekeeper/model/template.dart';
 import 'package:homekeeper/forms/templateform.dart';
 import 'package:homekeeper/repo/template/templatestore.dart';
 
-
 class TemplateListPage extends StatefulWidget {
   final TemplateStore service;
 
@@ -17,38 +16,31 @@ class TemplateListPage extends StatefulWidget {
 }
 
 class TemplateListPageState extends State<TemplateListPage> {
-
   final List<Template> templates = <Template>[];
   final TextStyle _biggerFont = const TextStyle(fontSize: 18.0);
-  final   _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-          
-        });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-     body:  buildBody(),
-     floatingActionButton: new FloatingActionButton(
+      body: buildBody(),
+      floatingActionButton: new FloatingActionButton(
         onPressed: () {
           Navigator.push(
-            context,
-            MaterialPageRoute( 
-              builder: (context) => EventForm(
-                onSubmit: (event) {
-                  setState(() {
-                    widget.service.createTemplate(event);                                      
-                  });
-                }
-              )
-            )
-          );
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EventForm(onSubmit: (event) {
+                        setState(() {
+                          widget.service.createTemplate(event);
+                        });
+                      })));
         },
         tooltip: 'Add New Event',
         child: new Icon(Icons.add),
@@ -58,11 +50,10 @@ class TemplateListPageState extends State<TemplateListPage> {
 
   Widget buildBody() {
     return StreamBuilder<List<Template>>(
-      stream:  widget.service.getTemplates(),
+      stream: widget.service.getTemplates(),
       builder: (context, snapshot) {
-        if(!snapshot.hasData) 
-          return LinearProgressIndicator();
-        
+        if (!snapshot.hasData) return LinearProgressIndicator();
+
         return buildEventList(context, snapshot.data);
       },
     );
@@ -70,9 +61,9 @@ class TemplateListPageState extends State<TemplateListPage> {
 
   Widget buildEventList(BuildContext context, List<Template> snapshot) {
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      children: snapshot.map((data) => buildEventRow(context, data)).toList()
-    );
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        children:
+            snapshot.map((data) => buildEventRow(context, data)).toList());
   }
 
   Widget buildEventRow(BuildContext context, Template event) {
@@ -86,34 +77,29 @@ class TemplateListPageState extends State<TemplateListPage> {
       trailing: Icon(Icons.chevron_right),
       onTap: () {
         Navigator.push(
-          context, 
-          MaterialPageRoute( 
-            builder: (context) => EventForm(
-              template: event,
-              onSubmit: (event) {
-                setState(() {
-                  widget.service.updateTemplate(event);
-                });
-              }
-            )
-          )
-        );
-        _scaffoldKey.currentState.showSnackBar(
-          SnackBar(content: Text('Event reference: ${event.reference.documentID}'))
-        );
+            context,
+            MaterialPageRoute(
+                builder: (context) => EventForm(
+                    template: event,
+                    onSubmit: (event) {
+                      setState(() {
+                        widget.service.updateTemplate(event);
+                      });
+                    })));
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text('Event reference: ${event.reference != null ? event.reference.documentID : "Empty Reference"}')));
       },
     );
   }
 
   Widget buildEventSubtitle(Template event) {
-    return Text('${event.occurenceDate.difference(DateTime.now()).inDays} days till next occurence.'
-    );
+    return Text(
+        '${event.occurenceDate.difference(DateTime.now()).inDays} days till next occurence.');
   }
 
   Icon _iconForCategory(String category) {
-    for(TemplateCategory cat in TemplateCategory.templateCategories) 
-      if(cat.name == category) 
-        return cat.icon;
+    for (TemplateCategory cat in TemplateCategory.templateCategories)
+      if (cat.name == category) return cat.icon;
     return null;
   }
 }

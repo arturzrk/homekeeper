@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:homekeeper/bloc/events_bloc.dart';
+import 'package:homekeeper/forms/eventform.dart';
+import 'package:homekeeper/model/event.dart';
+import 'package:homekeeper/model/template.dart';
 import 'package:homekeeper/pages/eventbuttons.dart';
 import 'package:homekeeper/pages/eventtemplates.dart';
 import 'package:homekeeper/pages/events.dart';
@@ -25,14 +29,14 @@ class NavigationPageState extends State<NavigationPage>
     with TickerProviderStateMixin {
   int _currentIndex = 0;
   TemplateStore _templateService;
-  EventStore _taskService;
+  EventStore _eventService;
 
   @override
   void initState() {
     super.initState();
     var injector = Injector.getInjector();
     _templateService = injector.get<TemplateStore>();
-    _taskService = injector.get<EventStore>();
+    _eventService = injector.get<EventStore>();
   }
 
   @override
@@ -45,13 +49,16 @@ class NavigationPageState extends State<NavigationPage>
     final List<NavigationTabBody> _navigationBodies = <NavigationTabBody>[
       NavigationTabBody(
           title: 'Tap to trigger the Event',
-          child: EventButtons(templateService: _templateService)),
+          child: EventButtons(
+            templateService: _templateService,
+            onEventTriggered: eventTriggered,
+          )),
       NavigationTabBody(
           title: 'Event Templates',
           child: TemplateListPage(service: _templateService)),
       NavigationTabBody(
         title: 'Event History',
-        child: EventListPage(service: _taskService),
+        child: EventListPage(service: _eventService),
       ),
     ];
 
@@ -86,5 +93,20 @@ class NavigationPageState extends State<NavigationPage>
         appBar: AppBar(title: Text(_navigationBodies[_currentIndex].title)),
         body: Center(child: _navigationBodies[_currentIndex].child),
         bottomNavigationBar: botNavBar);
+  }
+
+  void eventTriggered(Template template) async {
+    Event _event = EventsBloc.fromTemplate(template);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) {
+              return EventForm(event: _event, onSubmit: _eventSubmitted,);
+            },
+            fullscreenDialog: true));
+  }
+
+  void _eventSubmitted(Event event) {
+    _eventService.createEvent(event);
   }
 }
