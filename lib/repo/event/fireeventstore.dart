@@ -13,22 +13,23 @@ class FireEventStore implements EventStore {
 
   @override
   Future<String> createEvent(Event event) async {
-    final ref = Firestore.instance.collection(getCollectionPath()).document();
+    final ref = fireStoreCollection.document();
     await ref.setData(event.toMap());
     return ref.documentID;
   }
 
-  String getCollectionPath() => 'users/$accountName/event';
+  String get collectionPath => 'users/$accountName/event';
+  CollectionReference get fireStoreCollection => Firestore.instance.collection(collectionPath);
 
   @override
   Future deleteEvent(Event eventToDelete) async {
-    eventToDelete.reference.delete();
+    fireStoreCollection.document(eventToDelete.reference).delete();
   }
 
   @override
   Stream<List<Event>> getEvents() async* {
     final snapshotStream =
-        Firestore.instance.collection(getCollectionPath()).snapshots();
+        fireStoreCollection.snapshots();
     await for (var snapshot in snapshotStream) {
       var templateSnapshots = snapshot.documents;
       var x = templateSnapshots.map((document) {
@@ -40,7 +41,7 @@ class FireEventStore implements EventStore {
 
   @override
   Future updateEvent(Event updatedTask) async {
-    await updatedTask.reference.updateData(updatedTask.toMap());
+    await fireStoreCollection.document(updatedTask.reference).updateData(updatedTask.toMap());
   }
 
 }

@@ -6,7 +6,7 @@ class Template {
   DateTime occurenceDate;
   bool isReoccurence = false;
   int reoccurenceDaysCount;
-  DocumentReference reference;
+  String reference;
   Template({this.title, this.category, this.occurenceDate, this.reoccurenceDaysCount, this.isReoccurence, this.reference});
 
   Template.fromMap(Map<String, dynamic> map, {this.reference})
@@ -20,7 +20,7 @@ class Template {
        reoccurenceDaysCount = map['reoccurenceDaysCount'];
 
   Template.fromSnapshot(DocumentSnapshot snapshot)
-    :this.fromMap(snapshot.data, reference: snapshot.reference);
+    :this.fromMap(snapshot.data, reference: snapshot.reference.documentID);
 
   Map<String, dynamic>  toMap() {
     var map = Map<String,dynamic>();

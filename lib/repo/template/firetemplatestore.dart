@@ -19,7 +19,7 @@ class FireTemplateStore implements TemplateStore {
 
   @override
   Future deleteTemplate(Template  templateToDelete) async {
-    return templateToDelete.reference.delete();
+    //return templateToDelete.reference.delete();
   }
 
   @override
@@ -37,7 +37,7 @@ class FireTemplateStore implements TemplateStore {
 
   @override
   Future updateTemplate(Template updatedTemplate) async {
-    await updatedTemplate.reference.updateData(updatedTemplate.toMap());
+    //await updatedTemplate.reference.updateData(updatedTemplate.toMap());
   }
 
   String getCollectionPath() => 'users/$accountName/template';
