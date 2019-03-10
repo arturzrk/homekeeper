@@ -1,13 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:homekeeper/forms/templateform.dart';
 import 'package:homekeeper/model/template.dart';
-import 'package:mockito/mockito.dart';
 
 const String EVENT_TITLE = 'Testing Event Form.';
-
-class MockDocumentReference extends Mock implements DocumentReference {}
 
 void main() {
   testWidgets('Event Template Update test', (WidgetTester tester) async {
@@ -17,7 +13,7 @@ void main() {
       occurenceDate: DateTime.now(),
       category: 'Inne',
       reoccurenceDaysCount: 10,
-      reference: MockDocumentReference()
+      reference: 'SomeRandomString'
     );
     Template targetEvent;
     EventForm page = new EventForm(

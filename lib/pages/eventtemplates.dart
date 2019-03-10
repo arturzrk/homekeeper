@@ -87,7 +87,7 @@ class TemplateListPageState extends State<TemplateListPage> {
                       });
                     })));
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-            content: Text('Event reference: ${event.reference != null ? event.reference.documentID : "Empty Reference"}')));
+            content: Text('Event reference: ${event.reference != null ? event.reference : "Empty Reference"}')));
       },
     );
   }
