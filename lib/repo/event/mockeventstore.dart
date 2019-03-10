@@ -11,10 +11,10 @@ class MockEventStore implements EventStore {
     Event(
       title: 'first',
       category: TemplateCategory.hydrofor.name,
-      startDate: DateTime.now().subtract(Duration(minutes: 45)),
+      startDate: DateTime.now().subtract(Duration(minutes: 45))
     ),
     Event(
-      title: 'second',
+      title: 'second title has been provided to test the behaviour if it is long',
       category: TemplateCategory.rekuperator.name,
       startDate: DateTime.now().subtract(Duration(days: 25)),
     ),

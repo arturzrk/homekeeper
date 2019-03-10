@@ -99,7 +99,7 @@ class TemplateListPageState extends State<TemplateListPage> {
 
   Icon _iconForCategory(String category) {
     for (TemplateCategory cat in TemplateCategory.templateCategories)
-      if (cat.name == category) return cat.icon;
+      if (cat.name == category) return Icon(cat.icon, size: 20.0);
     return null;
   }
 }
