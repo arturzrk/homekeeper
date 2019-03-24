@@ -4,9 +4,6 @@ import 'package:homekeeper/model/category.dart';
 import 'package:homekeeper/model/event.dart';
 import 'package:homekeeper/utils/history_describer.dart';
 
-final TextStyle _biggerFont =
-    const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w900);
-
 class EventRow extends StatelessWidget {
   final Event event;
   final ValueChanged<Event> onTap;
@@ -16,6 +13,9 @@ class EventRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _rowHeight = 80.0;
+    final TextStyle _listItemTitleFont = Theme.of(context).textTheme.title;
+    final _subtitleListItemFont =
+        const TextStyle(fontStyle: FontStyle.normal, fontSize: 16);
     return InkWell(
       onTap: () => onTap(event),
       child: Container(
@@ -23,19 +23,35 @@ class EventRow extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _iconForCategory(event.category),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _iconForCategory(event.category),
+            ),
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(event.title, style: _biggerFont, maxLines: 2, overflow: TextOverflow.ellipsis,),
-                  Text(buildEventSubtitle(event), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 17),)
-                ]
-              ),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        event.title,
+                        style: _listItemTitleFont,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(
+                      buildEventSubtitle(event),
+                      style: _subtitleListItemFont,
+                    )
+                  ]),
             ),
             Align(
-                child: Icon(Icons.chevron_right, size: 40.0,),
+                child: Icon(
+                  Icons.chevron_right,
+                  size: 40.0,
+                ),
                 alignment: Alignment.centerRight)
           ],
         ),

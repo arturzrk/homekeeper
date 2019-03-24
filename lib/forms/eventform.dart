@@ -66,7 +66,7 @@ class EventFormState extends State<EventForm> {
     return Scaffold(
         appBar: AppBar(title: Text(title)),
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 8.0),
+          padding: const EdgeInsets.all(32.0),
           child: Form(
               key: _formKey,
               child: ListView(children: [
@@ -100,40 +100,41 @@ class EventFormState extends State<EventForm> {
                         });
                       });
                     }),
-                FormField(validator: (value) {
-                  if (value == null || value.toString().isEmpty)
-                    return EventForm.eventCategoryRequiredValidationMessage;
-                  return null;
-                },
-                initialValue: _formData.category, 
-                builder: (FormFieldState state) {
-                  final decoration = const InputDecoration(
-                      labelText: 'Category',
-                      hintText: 'Choose a category',
-                      contentPadding: EdgeInsets.zero);
+                FormField(
+                    validator: (value) {
+                      if (value == null || value.toString().isEmpty)
+                        return EventForm.eventCategoryRequiredValidationMessage;
+                      return null;
+                    },
+                    initialValue: _formData.category,
+                    builder: (FormFieldState state) {
+                      final decoration = const InputDecoration(
+                          labelText: 'Category',
+                          hintText: 'Choose a category',
+                          contentPadding: EdgeInsets.zero);
 
-                  return InputDecorator(
-                      decoration:
-                          decoration.copyWith(errorText: state.errorText),
-                      baseStyle: Theme.of(context).textTheme.title,
-                      child: DropdownButton<String>(
-                          key: Key('category-dropdown'),
-                          value: _formData.category,
-                          onChanged: (String value) {
-                            setState(() {
-                              _formData.category = value;
-                            });
-                            state.didChange(value);
-                          },
-                          items: TemplateCategory.templateCategories
-                              .map((category) {
-                            return DropdownMenuItem<String>(
-                              key: Key('category-${category.name}'),
-                              value: category.name,
-                              child: Text(category.name),
-                            );
-                          }).toList()));
-                }),
+                      return InputDecorator(
+                          decoration:
+                              decoration.copyWith(errorText: state.errorText),
+                          baseStyle: Theme.of(context).textTheme.title,
+                          child: DropdownButton<String>(
+                              key: Key('category-dropdown'),
+                              value: _formData.category,
+                              onChanged: (String value) {
+                                setState(() {
+                                  _formData.category = value;
+                                });
+                                state.didChange(value);
+                              },
+                              items: TemplateCategory.templateCategories
+                                  .map((category) {
+                                return DropdownMenuItem<String>(
+                                  key: Key('category-${category.name}'),
+                                  value: category.name,
+                                  child: Text(category.name),
+                                );
+                              }).toList()));
+                    }),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: RaisedButton(
