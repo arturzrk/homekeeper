@@ -9,18 +9,21 @@ class Template {
   String reference;
   Template({this.title, this.category, this.occurenceDate, this.reoccurenceDaysCount, this.isReoccurence, this.reference});
 
+  Template.fromSnapshot(DocumentSnapshot snapshot)
+    :this.fromMap(snapshot.data, reference: snapshot.reference.documentID);
+
   Template.fromMap(Map<String, dynamic> map, {this.reference})
      : assert(map['title'] != null),
        assert(map['category'] != null),
        assert(map['occurenceDate'] != null),
        title = map['title'],
        category = map['category'],
-       occurenceDate = map['occurenceDate'],
        isReoccurence = map['isReoccurence'],
-       reoccurenceDaysCount = map['reoccurenceDaysCount'];
+       reoccurenceDaysCount = map['reoccurenceDaysCount'] {
 
-  Template.fromSnapshot(DocumentSnapshot snapshot)
-    :this.fromMap(snapshot.data, reference: snapshot.reference.documentID);
+    Timestamp occurenceDateTimeStamp = map['occurenceDate'];
+    occurenceDate = occurenceDateTimeStamp.toDate();
+  }
 
   Map<String, dynamic>  toMap() {
     var map = Map<String,dynamic>();
