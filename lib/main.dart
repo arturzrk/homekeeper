@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homekeeper/app_config.dart';
-import 'package:homekeeper/pages/navigationpage.dart';
+import 'package:homekeeper/forms/pre_login.dart';
 
 class MyApp extends StatelessWidget {
 
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Raleway',
         primarySwatch: Colors.blue,
       ),
-      home: NavigationPage(),
+      home: PreLoginForm(),
     );
   }
 }
