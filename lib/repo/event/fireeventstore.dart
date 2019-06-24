@@ -32,6 +32,9 @@ class FireEventStore implements EventStore {
         fireStoreCollection.snapshots();
     await for (var snapshot in snapshotStream) {
       var templateSnapshots = snapshot.documents;
+      templateSnapshots.sort((a, b) {
+    return Event.fromSnapshot(b).startDate.compareTo(Event.fromSnapshot(a).startDate);
+    });
       var x = templateSnapshots.map((document) {
         return Event.fromSnapshot(document);
       }).toList();
